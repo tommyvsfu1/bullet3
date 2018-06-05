@@ -235,7 +235,7 @@ void ImportSDFSetup::initPhysics()
 				btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[1];
 				btRigidBody* body = btRigidBody::upcast(obj);
 				btTransform trans = obj->getWorldTransform();
-				body->setAngularVelocity(btVector(0,0,1));
+				body->setAngularVelocity(btVector3(0,0,1));
 
 
 
