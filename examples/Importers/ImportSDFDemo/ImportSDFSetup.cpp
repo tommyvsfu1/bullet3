@@ -21,7 +21,7 @@
 
 
 
-
+#include <iostream>
 
 #include "../CommonInterfaces/CommonMultiBodyBase.h"
 
@@ -49,7 +49,7 @@ public:
 
 	virtual void resetCamera()
 	{
-		float dist = 3.5;
+		float dist = 30;
 		float pitch = -28;
 		float yaw = -136;
 		float targetPos[3]={0.47,0,-0.64};
@@ -131,7 +131,7 @@ ImportSDFSetup::ImportSDFSetup(struct GUIHelperInterface* helper, int option, co
 		
 		if (gFileNameArray.size()==0)
 		{
-			gFileNameArray.push_back("two_cubes.sdf");
+			gFileNameArray.push_back("cube_small.sdf");
 
 		}
 
@@ -200,10 +200,9 @@ void ImportSDFSetup::initPhysics()
 
         btTransform rootTrans;
         rootTrans.setIdentity();
-        
         for (int m =0; m<u2b.getNumModels();m++)
 		{
-
+			
             u2b.activateModel(m);
             
 			btMultiBody* mb = 0;
@@ -215,12 +214,29 @@ void ImportSDFSetup::initPhysics()
 			MyMultiBodyCreator creation(m_guiHelper);
 
             u2b.getRootTransformInWorld(rootTrans);
+
+			/*
+				TO DO
+				Here you can set the Hat Initial Position , Velocity ......
+				Feng Yu
+			*/
+			if (m==1) {
+			rootTrans.setOrigin(btVector3(0.1,0,30));
+			}
+
+
+
+			
+			/*Create rigid body in the world*/
 			ConvertURDF2Bullet(u2b,creation, rootTrans,m_dynamicsWorld,m_useMultiBody,u2b.getPathPrefix(),CUF_USE_SDF);
+			
+			/*Check multibody */
 			mb = creation.getBulletMultiBody();
 			
-			
+			/*
 			if (m_useMultiBody && mb )
 			{
+				
 				std::string*   name = new std::string(u2b.getLinkName(u2b.getRootLinkIndex()));
 				m_nameMemory.push_back(name);
 #ifdef TEST_MULTIBODY_SERIALIZATION
@@ -229,8 +245,10 @@ void ImportSDFSetup::initPhysics()
 				mb->setBaseName(name->c_str());
 				//create motors for each btMultiBody joint
 				int numLinks = mb->getNumLinks();
+				std::cout << "Number of links are" << numLinks << std::endl;
 				for (int i=0;i<numLinks;i++)
 				{
+
 					int mbLinkIndex = i;
 					int urdfLinkIndex = creation.m_mb2urdfLink[mbLinkIndex];
 
@@ -272,6 +290,7 @@ void ImportSDFSetup::initPhysics()
 
 				}
 			} 
+			*/
 		}
 
 	
@@ -281,27 +300,28 @@ void ImportSDFSetup::initPhysics()
         }
 
 
-
+		/*
+		Create Ground  
+		*/
 		bool createGround=true;
 		if (createGround)
 		{
-			btVector3 groundHalfExtents(20,20,20);
+			btVector3 groundHalfExtents(50,50,50);
 			groundHalfExtents[upAxis]=1.f;
 			btBoxShape* box = new btBoxShape(groundHalfExtents);
 			box->initializePolyhedralFeatures();
 
 			m_guiHelper->createCollisionShapeGraphicsObject(box);
-			btTransform start; start.setIdentity();
+			btTransform start; 
+			start.setIdentity();
 			btVector3 groundOrigin(0,0,0);
-			groundOrigin[upAxis]=-2.5;
+			groundOrigin[upAxis]=-1.f;
 			start.setOrigin(groundOrigin);
-			btRigidBody* body =  createRigidBody(0,start,box);
-			//m_dynamicsWorld->removeRigidBody(body);
-		   // m_dynamicsWorld->addRigidBody(body,2,1);
-			btVector3 color(0.5,0.5,0.5);
+			btVector3 color(0.0,0.0,0.5);
+			btRigidBody* body =  createRigidBody(0,start,box,btVector4(0,0,1,1));
 			m_guiHelper->createRigidBodyGraphicsObject(body,color);
 		}
-
+		
 		///this extra stepSimulation call makes sure that all the btMultibody transforms are properly propagates.
 		m_dynamicsWorld->stepSimulation(1. / 240., 0);// 1., 10, 1. / 240.);
 	}
@@ -313,6 +333,27 @@ void ImportSDFSetup::stepSimulation(float deltaTime)
 {
 	if (m_dynamicsWorld)
 	{
+		/*TO DO*/
+		/* Get Hat object 
+		   This Three class are the main class dealing with rigid body
+		   can obtain x(t), v(t), a(t), angular velocity ...etc
+		   Actually I'm not very familiar with them yet.
+		   Feng Yu
+		*/
+		btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[1];
+		btRigidBody* body = btRigidBody::upcast(obj);
+		btTransform trans = obj->getWorldTransform();
+
+
+
+		std::cout << "Hat position :" << trans.getOrigin().getX() << "," << trans.getOrigin().getY() << "," 
+		<<  trans.getOrigin().getZ()  << std::endl;	
+
+
+
+
+		
+		/*
         for (int i=0;i<m_data->m_numMotors;i++)
         {
 			if (m_data->m_jointMotors[i])
@@ -326,7 +367,9 @@ void ImportSDFSetup::stepSimulation(float deltaTime)
 				//jointInfo->
 			}
         }
+		*/
 
+		/* Simulation Update */
 		//the maximal coordinates/iterative MLCP solver requires a smallish timestep to converge
 		m_dynamicsWorld->stepSimulation(deltaTime,10,1./240.);
 	}
