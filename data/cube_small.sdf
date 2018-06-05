@@ -4,7 +4,7 @@
       <pose frame=''>0 0 0 0 0 0</pose>
       <link name='unit_box_0::link'>
         <inertial>
-          <mass>1000</mass>
+          <mass>10000</mass>
           <inertia>
             <ixx>1</ixx>
             <ixy>0</ixy>
@@ -17,16 +17,16 @@
         <collision name='collision'>
           <geometry>
           <mesh>
-            <scale>0.1 0.1 0.1</scale>
-            <uri>Coat-Tree.obj</uri>
+            <scale>0.3 0.3 0.3</scale>
+            <uri>plar.obj</uri>
           </mesh>
         </geometry>
         </collision>
         <visual name='visual'>
           <geometry>
           <mesh>
-            <scale>0.1 0.1 0.1</scale>
-            <uri>Coat-Tree.obj</uri>
+            <scale>0.3 0.3 0.3</scale>
+            <uri>plar.obj</uri>
           </mesh>
         </geometry>
         </visual>
@@ -52,7 +52,7 @@
           <geometry>
           <mesh>
             <scale>0.005 0.005 0.005</scale>
-            <uri>Cap.stl</uri>
+            <uri>cap_.stl</uri>
           </mesh>
         </geometry>
         </collision>
@@ -60,7 +60,7 @@
           <geometry>
           <mesh>
             <scale>0.005 0.005 0.005</scale>
-            <uri>Cap.stl</uri>
+            <uri>cap_.stl</uri>
           </mesh>
         </geometry>
         </visual>

@@ -51,8 +51,8 @@ public:
 	{
 		float dist = 30;
 		float pitch = -28;
-		float yaw = -136;
-		float targetPos[3]={0.47,0,-0.64};
+		float yaw = 130;
+		float targetPos[3]={0.31,0,0};
 		m_guiHelper->resetCamera(dist,yaw,pitch,targetPos[0],targetPos[1],targetPos[2]);
 	}
 };
@@ -228,18 +228,26 @@ void ImportSDFSetup::initPhysics()
 
 			
 			/*Create rigid body in the world*/
-			ConvertURDF2Bullet(u2b,creation, rootTrans,m_dynamicsWorld,m_useMultiBody,u2b.getPathPrefix(),CUF_USE_SDF);
+			ConvertURDF2Bullet(u2b,creation, rootTrans,m_dynamicsWorld,false,u2b.getPathPrefix(),CUF_USE_SDF);
 			
-
-			if (m == 1) {
-				btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[1];
+				
+				btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[m];
 				btRigidBody* body = btRigidBody::upcast(obj);
 				btTransform trans = obj->getWorldTransform();
-				//body->setAngularVelocity(btVector3(0,0,1));
-
-
-
-			}
+				body->forceActivationState(DISABLE_DEACTIVATION);
+				if (m == 1) {
+					trans.setOrigin(btVector3(0,0,30));
+					//btMatrix3x3 btMat;
+					//btMat.setEuler(0,90,0);
+					btQuaternion btQuat;
+					btQuat.setEuler(0,90,0);
+					trans.setRotation(btQuat);
+					obj->setWorldTransform(trans);
+					//body->setLinearVelocity(btVector3(-2,2,0));
+					//body->setAngularVelocity(btVector3(1.0,0,0));
+					std::cout << "Hat  position   :" << trans.getOrigin().getX() << "," << trans.getOrigin().getY() << "," 
+					<<  trans.getOrigin().getZ()  << std::endl;	
+				}
 
 
 
@@ -337,6 +345,12 @@ void ImportSDFSetup::initPhysics()
 		
 		///this extra stepSimulation call makes sure that all the btMultibody transforms are properly propagates.
 		m_dynamicsWorld->stepSimulation(1. / 240., 0);// 1., 10, 1. / 240.);
+				btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[1];
+				btRigidBody* body = btRigidBody::upcast(obj);
+				btTransform trans = obj->getWorldTransform();
+				
+				//body->activate();
+				//body->setAngularVelocity(btVector3(0,0,0.1));
 	}
 
 
@@ -357,10 +371,9 @@ void ImportSDFSetup::stepSimulation(float deltaTime)
 		btRigidBody* body = btRigidBody::upcast(obj);
 		btTransform trans = obj->getWorldTransform();
 
+		//body->setLinearVelocity(btVector3(1,0,0));
 
 
-		std::cout << "Hat position :" << trans.getOrigin().getX() << "," << trans.getOrigin().getY() << "," 
-		<<  trans.getOrigin().getZ()  << std::endl;	
 
 
 
