@@ -43,7 +43,6 @@ ImportObjSetup::ImportObjSetup(struct GUIHelperInterface* helper, const char* fi
     if (fileName)
     {
         m_fileName = fileName;
-		m_fileName = "hat.obj";
     } else
     {
         m_fileName = "cube.obj";//"sponza_closed.obj";//sphere8.obj";
