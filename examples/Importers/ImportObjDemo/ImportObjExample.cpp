@@ -14,6 +14,8 @@
 #include "../CommonInterfaces/CommonRigidBodyBase.h"
 #include "../ImportMeshUtility/b3ImportMeshUtility.h"
 
+
+#include <iostream> // delete later VSUNG ==========================
 class ImportObjSetup : public CommonRigidBodyBase
 {
 
@@ -43,6 +45,7 @@ ImportObjSetup::ImportObjSetup(struct GUIHelperInterface* helper, const char* fi
     if (fileName)
     {
         m_fileName = fileName;
+		std::cout << "file name" << m_fileName << std::endl;
 		m_fileName = "hat.obj";
     } else
     {
