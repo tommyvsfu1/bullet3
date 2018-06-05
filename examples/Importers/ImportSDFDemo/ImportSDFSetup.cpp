@@ -230,6 +230,19 @@ void ImportSDFSetup::initPhysics()
 			/*Create rigid body in the world*/
 			ConvertURDF2Bullet(u2b,creation, rootTrans,m_dynamicsWorld,m_useMultiBody,u2b.getPathPrefix(),CUF_USE_SDF);
 			
+
+			if (m == 1) {
+				btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[1];
+				btRigidBody* body = btRigidBody::upcast(obj);
+				btTransform trans = obj->getWorldTransform();
+				body->setAngularVelocity(btVector(0,0,1));
+
+
+
+			}
+
+
+
 			/*Check multibody */
 			mb = creation.getBulletMultiBody();
 			
