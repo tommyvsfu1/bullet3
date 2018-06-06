@@ -220,9 +220,6 @@ void ImportSDFSetup::initPhysics()
 				Here you can set the Hat Initial Position , Velocity ......
 				Feng Yu
 			*/
-			if (m==1) {
-			rootTrans.setOrigin(btVector3(0.1,0,30));
-			}
 
 
 
@@ -230,22 +227,22 @@ void ImportSDFSetup::initPhysics()
 			/*Create rigid body in the world*/
 			ConvertURDF2Bullet(u2b,creation, rootTrans,m_dynamicsWorld,false,u2b.getPathPrefix(),CUF_USE_SDF);
 			
-				
+				if (m == 0) {				
 				btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[m];
 				btRigidBody* body = btRigidBody::upcast(obj);
 				btTransform trans = obj->getWorldTransform();
 				body->forceActivationState(DISABLE_DEACTIVATION);
-				if (m == 1) {
-					trans.setOrigin(btVector3(0,0,30));
+
+					trans.setOrigin(btVector3(0,0,0));
 					//btMatrix3x3 btMat;
 					//btMat.setEuler(0,90,0);
 					btQuaternion btQuat;
-					btQuat.setEuler(0,90,0);
+					btQuat.setEuler(0,0,0);
 					trans.setRotation(btQuat);
 					obj->setWorldTransform(trans);
 					//body->setLinearVelocity(btVector3(-2,2,0));
 					//body->setAngularVelocity(btVector3(1.0,0,0));
-					std::cout << "Hat  position   :" << trans.getOrigin().getX() << "," << trans.getOrigin().getY() << "," 
+					std::cout << "Dice  position   :" << trans.getOrigin().getX() << "," << trans.getOrigin().getY() << "," 
 					<<  trans.getOrigin().getZ()  << std::endl;	
 				}
 
@@ -348,8 +345,7 @@ void ImportSDFSetup::initPhysics()
 				btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[1];
 				btRigidBody* body = btRigidBody::upcast(obj);
 				btTransform trans = obj->getWorldTransform();
-				
-				//body->activate();
+
 				//body->setAngularVelocity(btVector3(0,0,0.1));
 	}
 

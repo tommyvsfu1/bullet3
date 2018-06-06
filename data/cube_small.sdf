@@ -1,6 +1,8 @@
+<? xml version="1.0" ?>
 <sdf version='1.6'>
+
   <world name='default'>
-    <model name='unit_box_0'>
+    <!--model name='unit_box_0'>
       <pose frame=''>0 0 0 0 0 0</pose>
       <link name='unit_box_0::link'>
         <inertial>
@@ -31,7 +33,7 @@
         </geometry>
         </visual>
       </link>
-    </model>
+    </model-->
 
 
     <model name='unit_box_1'>
@@ -51,16 +53,16 @@
         <collision name='collision'>
           <geometry>
           <mesh>
-            <scale>0.005 0.005 0.005</scale>
-            <uri>cap_.stl</uri>
+            <scale>0.5 0.5 0.5</scale>
+            <uri>dice.stl</uri>
           </mesh>
         </geometry>
         </collision>
         <visual name='visual'>
           <geometry>
           <mesh>
-            <scale>0.005 0.005 0.005</scale>
-            <uri>cap_.stl</uri>
+            <scale>0.5 0.5 0.5</scale>
+            <uri>dice.stl</uri>
           </mesh>
         </geometry>
         </visual>
