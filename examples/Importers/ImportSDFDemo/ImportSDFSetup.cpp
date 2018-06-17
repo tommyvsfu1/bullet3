@@ -44,7 +44,7 @@ public:
 
 	virtual void initPhysics();
 	virtual void stepSimulation(float deltaTime);
-
+	void numof_contact();
     void setFileName(const char* urdfFileName);
 
 	virtual void resetCamera()
@@ -352,29 +352,40 @@ void ImportSDFSetup::initPhysics()
 
 }
 
-void ImportSDFSetup::stepSimulation(float deltaTime)
-{
-	if (m_dynamicsWorld)
-	{
-		/*TO DO*/
-		/* Get Hat object 
-		   This Three class are the main class dealing with rigid body
-		   can obtain x(t), v(t), a(t), angular velocity ...etc
-		   Actually I'm not very familiar with them yet.
-		   Feng Yu
-		*/
+void ImportSDFSetup::numof_contact() {
 		btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[1];
 		btRigidBody* body = btRigidBody::upcast(obj);
 		btTransform trans = obj->getWorldTransform();
 
-		//body->setLinearVelocity(btVector3(1,0,0));
-
-
-
-
-
-
 		
+		int numManifolds = m_dynamicsWorld->getDispatcher()->getNumManifolds();
+		std::cout << "number of manifolds" << numManifolds << std::endl;
+		for (int i = 0; i < numManifolds; i++)
+		{
+			btPersistentManifold* contactManifold =  m_dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
+			const btCollisionObject* obA = contactManifold->getBody0();
+			const btCollisionObject* obB = contactManifold->getBody1();
+
+			int numContacts = contactManifold->getNumContacts();
+			for (int j = 0; j < numContacts; j++)
+			{
+				btManifoldPoint& pt = contactManifold->getContactPoint(j);
+				if (pt.getDistance() < 0.f)
+				{
+					const btVector3& ptA = pt.getPositionWorldOnA();
+					const btVector3& ptB = pt.getPositionWorldOnB();
+					const btVector3& normalOnB = pt.m_normalWorldOnB;
+				}
+			}
+		
+		}
+}
+
+void ImportSDFSetup::stepSimulation(float deltaTime)
+{
+	if (m_dynamicsWorld)
+	{
+		numof_contact();	
 		/*
         for (int i=0;i<m_data->m_numMotors;i++)
         {
